@@ -16,10 +16,12 @@ public class Server {
 
     public void abrirConexion(){
         try{
-            server = new ServerSocket(1234);
+            server = new ServerSocket(2345);
             client = server.accept();
+            
             input = new ObjectInputStream(client.getInputStream());
             str = (String)input.readObject();
+            System.out.println("se conecto");
             input.close();
             client.close();
             server.close();

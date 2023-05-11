@@ -20,11 +20,14 @@ public class Client {
     public void conectar(){
         str = "HOLA MUNDO";
         try{
-            cliente = new Socket("127.0.0.1", 9876);
+            cliente = new Socket("127.0.0.1", 2345);
             output = new ObjectOutputStream(cliente.getOutputStream());
             output.writeObject(str);
+            System.out.println("me voy a cconectar");
             // lo envia
             output.flush(); 
+
+
             output.close();
             cliente.close();
 
