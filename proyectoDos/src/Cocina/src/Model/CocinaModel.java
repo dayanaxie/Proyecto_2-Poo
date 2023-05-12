@@ -1,8 +1,8 @@
-package Model;
+package Cocina.src.Model;
 
 import java.util.*;
 
-import Controller.CocinaController.src.Server;
+import Sockets.Server;
 
 public class CocinaModel{
     ArrayList<Orden> ordenesPendientes;

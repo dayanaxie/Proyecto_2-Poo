@@ -1,9 +1,10 @@
-package Controller.SalonController.src;
+package Salon.src.Controller;
 
-import Model.Orden;
-import Model.SalonModel;
-import Model.Patterns.IObserver;
-import Model.Patterns.Observable;
+import Cocina.src.Model.Orden;
+import Patterns.IObserver;
+import Patterns.Observable;
+import Salon.src.Model.SalonModel;
+import Sockets.Client;
 
 
 // tengo que preguntar si debe de haber una conexion entre

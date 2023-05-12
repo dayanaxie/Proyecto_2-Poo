@@ -1,4 +1,4 @@
-package Model;
+package Cocina.src.Model;
 
 public class Orden {
     private Boolean lista;

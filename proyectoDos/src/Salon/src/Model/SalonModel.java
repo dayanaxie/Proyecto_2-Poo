@@ -1,9 +1,10 @@
-package Model;
+package Salon.src.Model;
 
-import Model.Patterns.Observable;
+import Sockets.Client;
+
 import java.util.*;
 
-import Controller.SalonController.src.Client;
+import Patterns.Observable;
 
 
 

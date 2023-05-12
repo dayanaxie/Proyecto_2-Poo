@@ -1,11 +1,13 @@
-package Controller.CocinaController.src;
+package Cocina.src.Controller;
 
-import Model.CocinaModel;
-import Model.Orden;
-import Model.Patterns.*;
+import Sockets.Server;
+
 import java.util.Random;
 
-import Controller.SalonController.src.SalonController;
+import Cocina.src.Model.CocinaModel;
+import Cocina.src.Model.Orden;
+import Patterns.*;
+import Salon.src.Controller.SalonController;
 
 
 public class CocinaController extends Observable {
