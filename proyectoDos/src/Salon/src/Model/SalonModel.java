@@ -1,8 +1,7 @@
 package Salon.src.Model;
 
-import Sockets.Client;
-
 import java.util.*;
+import java.net.*;
 
 import Patterns.Observable;
 
@@ -12,7 +11,7 @@ public class SalonModel extends Observable {
 
     private ArrayList<Boolean> mesas;
     private String cuenta;
-    private Client cocinaClient;
+    private Socket salonClient;
 
     public SalonModel(){
         mesas = new ArrayList<Boolean>();
@@ -35,13 +34,15 @@ public class SalonModel extends Observable {
         this.cuenta = cuenta;
     }
 
-    public Client getCocinaClient() {
-        return cocinaClient;
+    public Socket getSalonClient() {
+        return salonClient;
     }
 
-    public void setCocinaClient(Client cocinaClient) {
-        this.cocinaClient = cocinaClient;
+    public void setSalonClient(Socket salonClient) {
+        this.salonClient = salonClient;
     }
+
+
 
 
     

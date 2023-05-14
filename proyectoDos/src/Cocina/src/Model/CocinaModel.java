@@ -1,15 +1,16 @@
 package Cocina.src.Model;
 
 import java.util.*;
+import java.net.*;
 
-import Sockets.Server;
 
 public class CocinaModel{
     ArrayList<Orden> ordenesPendientes;
-    private Server salonServer;
+    private ServerSocket cocinaServer;
+    private Socket client;
 
     public CocinaModel(){
-        ordenesPendientes = new ArrayList<>();
+        ordenesPendientes = new ArrayList<>(Constants.Constants.CANT_MESAS);
     }
 
     public ArrayList<Orden> getOrdenesPendientes() {
@@ -20,12 +21,20 @@ public class CocinaModel{
         this.ordenesPendientes = ordenesPendientes;
     }
 
-    public Server getSalonServer() {
-        return salonServer;
+    public ServerSocket getCocinaServer() {
+        return cocinaServer;
     }
 
-    public void setSalonServer(Server salonServer) {
-        this.salonServer = salonServer;
+    public void setCocinaServer(ServerSocket cocinaServer) {
+        this.cocinaServer = cocinaServer;
+    }
+
+    public Socket getClient() {
+        return client;
+    }
+
+    public void setClient(Socket client) {
+        this.client = client;
     } 
 
     

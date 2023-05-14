@@ -1,40 +1,62 @@
 package Cocina.src.Controller;
 
-import Sockets.Server;
-
 import java.util.Random;
 
 import Cocina.src.Model.CocinaModel;
 import Cocina.src.Model.Orden;
-import Patterns.*;
 import Salon.src.Controller.SalonController;
+import SharedClasses.MensajeOrden;
+import java.net.*;
+import java.io.*;
 
 
-public class CocinaController extends Observable {
+public class CocinaController {
     private CocinaModel cocinaModel;
     private Random rand;
 
     public CocinaController(SalonController pSalonController){
         cocinaModel = new CocinaModel();
         rand = new Random(12345678);
-        Server salonServer = cocinaModel.getSalonServer();
-        salonServer = new Server();
-        addObserver(pSalonController);
+        ServerSocket cocinaServer = cocinaModel.getCocinaServer();
+        Socket client = cocinaModel.getClient();
+        abrirConexion(cocinaServer, client);
     }
 
 
     private void ordenLista(int pNumOrden){
         Orden orden = cocinaModel.getOrdenesPendientes().get(pNumOrden);
         orden.setLista(true);
-        notifyObservers(orden);
+    }
+
+    private void abrirConexion(ServerSocket pCocinaServer, Socket pClient){
+        try{
+            pCocinaServer = new ServerSocket(Constants.Constants.COCINA_PORT);
+            // despues de conectarse mostramos la interfaz para que no se pegue
+            // tiene que estar constantemente recibiendo las ordenes nuevas generadas
+            while(true){
+                pClient = pCocinaServer.accept();
+                ObjectInputStream input = new ObjectInputStream(pClient.getInputStream());
+                MensajeOrden mensaje = (MensajeOrden)input.readObject();
+                if(mensaje.getMensajeOrden() != null){
+                    System.out.println("Cocina recibio una orden");
+                    cocinaModel.getOrdenesPendientes().add(mensaje.getMensajeOrden());
+                }
+                pClient.close();
+            }
+        }catch(Exception e){
+            System.out.println(e);
+        }
+
     }
 
 
+
     
     
 
-
+/*
     public void prepararOrden(){
+        // SE TRABAJA CON LA INTERFAZ HAY QUE CAMBIAR ESTO
         int listSize = cocinaModel.getOrdenesPendientes().size();
         // thread para simular la preparacion de las ordenes
         while(true){
@@ -56,6 +78,7 @@ public class CocinaController extends Observable {
 
 
     }
+    */
 
 
     

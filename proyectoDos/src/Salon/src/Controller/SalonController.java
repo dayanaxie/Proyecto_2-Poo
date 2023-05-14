@@ -4,7 +4,9 @@ import Cocina.src.Model.Orden;
 import Patterns.IObserver;
 import Patterns.Observable;
 import Salon.src.Model.SalonModel;
-import Sockets.Client;
+import java.util.*;
+import java.net.*;
+import Constants.*;;
 
 
 // tengo que preguntar si debe de haber una conexion entre
@@ -14,19 +16,28 @@ public class SalonController implements IObserver{
     private SalonModel salonModel;
 
 
+    
+
+    public SalonController(){
+        salonModel = new SalonModel();
+        Socket salonClient = salonModel.getSalonClient();
+        conectar(salonClient);
+    }
+
+    public void conectar(Socket pSalonClient){
+        try{
+            pSalonClient = new Socket("127.0.0.1", Constants.COCINA_PORT);
+
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }
+
     @Override
     public void update(Observable pObservable, Object args) {
         // va a recibir al numero de mesa, y lo va a liberar y generara la cuenta
         
     }
-
-    public SalonController(){
-        salonModel = new SalonModel();
-        Client cocinaClient = salonModel.getCocinaClient();
-        cocinaClient = new Client();
-
-    }
-    
     public void ingresarOrden(Orden pOrden){
         // este metodo se encarga de mandarle la orden generada a la cocina
 
