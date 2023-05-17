@@ -2,12 +2,12 @@ package Cocina.src.Model;
 
 import java.util.*;
 import java.net.*;
-
-
+import java.io.*;
 public class CocinaModel{
     ArrayList<Orden> ordenesPendientes;
     private ServerSocket cocinaServer;
     private Socket client;
+    private ObjectOutputStream output;
 
     public CocinaModel(){
         ordenesPendientes = new ArrayList<>(Constants.Constants.CANT_MESAS);
@@ -35,6 +35,14 @@ public class CocinaModel{
 
     public void setClient(Socket client) {
         this.client = client;
+    }
+
+    public ObjectOutputStream getOutput() {
+        return output;
+    }
+
+    public void setOutput(ObjectOutputStream output) {
+        this.output = output;
     } 
 
     

@@ -3,6 +3,7 @@ package Cocina.src.Model;
 public class Orden {
     private Boolean lista;
     private int numMesa;
+    // tiene que tener la hamburguesa
 
     public Orden(int pNumMesa){
         lista = false;

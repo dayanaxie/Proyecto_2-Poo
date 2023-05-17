@@ -1,22 +1,25 @@
 package Salon.src.Controller;
 
 import Cocina.src.Model.Orden;
-import Patterns.IObserver;
 import Patterns.Observable;
+import Patterns.*;
+
 import Salon.src.Model.SalonModel;
+import Salon.src.View.GuiSalon;
+import SharedClasses.MensajeOrden;
+
 import java.util.*;
 import java.net.*;
-import Constants.*;;
+import java.io.*;
 
+
+import Constants.*;
 
 // tengo que preguntar si debe de haber una conexion entre
 // cocina y salon, xq salon le debe de mandar las ordenes ingresadas a cocina
 
 public class SalonController implements IObserver{
     private SalonModel salonModel;
-
-
-    
 
     public SalonController(){
         salonModel = new SalonModel();
@@ -25,21 +28,38 @@ public class SalonController implements IObserver{
     }
 
     public void conectar(Socket pSalonClient){
+        //esto tengo que ponerle mas detalle
+        while(true){
+            try{ 
+                GuiSalon guiSalon = new GuiSalon();
+                guiSalon.addObserver(this);
+                if(salonModel.getOutput() != null){
+                    ObjectOutputStream output = salonModel.getOutput();
+                    output.flush();
+                    salonModel.setOutput(null);
+                }
+            }catch(Exception e){
+                System.out.println(e);
+            }
+        }
+        
+    }
+
+    
+    public void ingresarOrden(Orden pOrden){
+        // este metodo se encarga de mandarle la orden generada a la cocina
+        ObjectOutputStream output = salonModel.getOutput();
         try{
-            pSalonClient = new Socket("127.0.0.1", Constants.COCINA_PORT);
+            output = new ObjectOutputStream(salonModel.getSalonClient().getOutputStream());
+            MensajeOrden mensaje = new MensajeOrden();
+            mensaje.setMensajeOrden(pOrden);
+            output.writeObject(mensaje);
+            salonModel.setOutput(output);
 
         }catch(Exception e){
             System.out.println(e);
         }
-    }
-
-    @Override
-    public void update(Observable pObservable, Object args) {
-        // va a recibir al numero de mesa, y lo va a liberar y generara la cuenta
         
-    }
-    public void ingresarOrden(Orden pOrden){
-        // este metodo se encarga de mandarle la orden generada a la cocina
 
     }
 
@@ -59,6 +79,14 @@ public class SalonController implements IObserver{
     public void crearOrdenManual(){
         // esto tengo que pensarlo mas
     }
+
+    
+    @Override
+    public void update(Observable pObservable, Object args) {
+        ingresarOrden((Orden)args);
+        
+    }
+
     
     
 }
