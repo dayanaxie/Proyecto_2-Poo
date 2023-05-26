@@ -8,6 +8,7 @@ public class CocinaModel{
     private ServerSocket cocinaServer;
     private Socket client;
     private ObjectOutputStream output;
+    private ObjectInputStream input;
 
     public CocinaModel(){
         ordenesPendientes = new ArrayList<>(Constants.Constants.CANT_MESAS);
@@ -43,7 +44,17 @@ public class CocinaModel{
 
     public void setOutput(ObjectOutputStream output) {
         this.output = output;
-    } 
+    }
+
+    public ObjectInputStream getInput() {
+        return input;
+    }
+
+    public void setInput(ObjectInputStream input) {
+        this.input = input;
+    }
+
+
 
     
     

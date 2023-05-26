@@ -15,6 +15,7 @@ public class SalonModel extends Observable {
 
     private ArrayList<Boolean> mesas;
     private String cuenta;
+    private ServerSocket salonServer;
     private Socket salonClient;
     private ObjectOutputStream output;
     private ObjectInputStream input;
@@ -22,11 +23,7 @@ public class SalonModel extends Observable {
     public SalonModel(){
         mesas = new ArrayList<Boolean>();
         cuenta = "";
-        try{
-            salonClient = new Socket("127.0.0.1", Constants.COCINA_PORT);
-        }catch(Exception e){
-            System.out.println(e);
-        }
+        
     }
 
     public ArrayList<Boolean> getMesas() {
@@ -67,6 +64,14 @@ public class SalonModel extends Observable {
 
     public void setInput(ObjectInputStream input) {
         this.input = input;
+    }
+
+    public ServerSocket getSalonServer() {
+        return salonServer;
+    }
+
+    public void setSalonServer(ServerSocket salonServer) {
+        this.salonServer = salonServer;
     }
 
 

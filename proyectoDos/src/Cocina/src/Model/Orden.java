@@ -1,6 +1,8 @@
 package Cocina.src.Model;
+import java.io.Serializable;
 
-public class Orden {
+
+public class Orden implements Serializable{
     private Boolean lista;
     private int numMesa;
     // tiene que tener la hamburguesa
