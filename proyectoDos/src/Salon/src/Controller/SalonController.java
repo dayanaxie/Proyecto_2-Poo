@@ -41,11 +41,11 @@ public class SalonController extends Observable implements IObserver{
                 //System.out.println("Intentando conectar");
                 //System.out.println("no llega aqui");
                 if(salonModel.getOutput() != null){    
-                    System.out.println("deberia de etrar aqui");
+                    //System.out.println("deberia de etrar aqui");
                     ObjectOutputStream output = salonModel.getOutput();
-                    System.out.println("lo mando");
+                    //System.out.println("lo mando");
                     output.flush();
-                    System.out.println("reseteo");
+                    //System.out.println("reseteo");
                     salonModel.setOutput(null);
                     
                 }
@@ -63,25 +63,26 @@ public class SalonController extends Observable implements IObserver{
     private void abrirConexion(){
         // este es para que cocina se conecte a salon
         try{
-            System.out.println("abrir SALON_PORT2");
+            System.out.println("Se abrio SALON_PORT2");
             ServerSocket salonServer = new ServerSocket(Constants.SALON_PORT2);
-            System.out.println("Esperando conexion");
-            
+            System.out.println("Salon esta esperando conexion");
+            Socket client = salonServer.accept();
+            System.out.println("SE CONECTOOOOOOOOOOOOOOOOOOOOO");
+            salonModel.setSalonClient(client);
+            salonModel.setSalonServer(salonServer);
             while(true){
-                Socket client = salonServer.accept();
-                System.out.println("SE CONECTOOOOOOOOOOOOOOOOOOOOO");
-                salonModel.setSalonClient(client);
-                salonModel.setSalonServer(salonServer);
-                //if(client.getInputStream().)
-                if(client.getInputStream().available() > 0){
-                    
-                    System.out.println(client.getInputStream().available() );
+                if(client.getInputStream().available() > 0){                    
                     System.out.println("Salon recibió la notificación de facturar la mesa: " );
                     ObjectInputStream input = new ObjectInputStream(client.getInputStream());
                     MensajeNotif mensaje = (MensajeNotif) input.readObject();
                     System.out.println(mensaje.getMensaje());
                     notifyObservers(mensaje.getMensaje());
                     salonModel.setInput(null);
+                    // como cocina se desconecta despues de mandar el input hay que volverlo a aceptar
+                    client = salonServer.accept();
+                    System.out.println("SE CONECTOOOOOOOOOOOOOOOOOOOOO");
+                    salonModel.setSalonClient(client);
+                    salonModel.setSalonServer(salonServer);
                 }
                 
             }
@@ -95,18 +96,18 @@ public class SalonController extends Observable implements IObserver{
     public void ingresarOrden(Orden pOrden){
         // este metodo se encarga de mandarle la orden generada a la cocina
         try{
-            System.out.println("1");
+            System.out.println("1" );
             ObjectOutputStream output = new ObjectOutputStream(salonModel.getSalonClient().getOutputStream());
-            System.out.println("2");
+            System.out.println("2" );
             MensajeOrden mensaje = new MensajeOrden();
-            System.out.println("3");
             mensaje.setMensajeOrden(pOrden);
-            System.out.println("4");
+            System.out.println("3" );
             output.writeObject(mensaje);
-            System.out.println("5");
+            System.out.println("4" );
             salonModel.setOutput(output);
-            System.out.println("se escribio la orden");
+            System.out.println("Se ingreso la orden !!!!!!" );
         }catch(Exception e){
+            System.out.println("El problema esta en ingresar orden" );
             System.out.println(e);
         }
         
@@ -133,7 +134,7 @@ public class SalonController extends Observable implements IObserver{
     
     @Override
     public void update(Observable pObservable, Object args) {
-        System.out.println("llego a update");
+        //System.out.println("llego a update");
         ingresarOrden((Orden)args);
         
     }

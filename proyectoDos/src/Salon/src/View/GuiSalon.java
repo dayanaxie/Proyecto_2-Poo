@@ -79,10 +79,10 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
             if(mesasComboBox.getSelectedItem() != null){
                 //Orden orden = new Orden(Integer.parseInt(mesasComboBox.getSelectedItem()));
                 Orden orden = new Orden((int)mesasComboBox.getSelectedItem());
-                System.out.println("cree la orden");
+                //System.out.println("cree la orden");
                 // falta agregarle lo que pidio a la hamburguesa antes de mandar la orden
                 notifyObservers(orden);
-                System.out.println("termine de notificar");
+                //System.out.println("termine de notificar");
                 mesaOcupada(orden.getNumMesa());
                 updateNumeroMesa(); //esto es para actualizar las mesas disponibles
             }
@@ -121,8 +121,7 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
 
     @Override
     public void update(Observable pObservable, Object args) {
-        System.out.println("llego a update" );
-        
+        //System.out.println("llego a update" );
         mesaFacturar((int)args);
         
     }
@@ -139,7 +138,8 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
     }
 
     private void mesaFacturar(int pNum){
-        System.out.println("VOY A FACTURAR UNA MESA" );
+
+        System.out.println("VOY A FACTURAR LA MESA: " + pNum );
         JButton boton = listMesas.get(pNum);
         boton.setBackground(Color.green);
 
@@ -188,12 +188,12 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
             panelMesas.add(boton);
         }
 
-        JButton boton =  listMesas.get(0);
-        boton.setBackground(Color.GREEN);
-        boton =  listMesas.get(2);
-        boton.setBackground(Color.GREEN);
-        boton =  listMesas.get(5);
-        boton.setBackground(Color.GREEN);
+        //JButton boton =  listMesas.get(0);
+        //boton.setBackground(Color.GREEN);
+       // boton =  listMesas.get(2);
+        //boton.setBackground(Color.GREEN);
+        //boton =  listMesas.get(5);
+        //boton.setBackground(Color.GREEN);
 
     }
 

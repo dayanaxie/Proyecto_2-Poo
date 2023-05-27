@@ -55,7 +55,7 @@ public class GuiCocina extends Observable implements ActionListener, IObserver{
                 int numOrden = (int)comboNumOrden.getSelectedItem();
                 System.out.println("lista orden: " + numOrden);
                 notifyObservers(numOrden);
-                System.out.println("termine de notificar");
+                //System.out.println("termine de notificar");
                 ordenLista(numOrden);
             }
             

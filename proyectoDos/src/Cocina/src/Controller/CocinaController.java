@@ -25,7 +25,7 @@ public class CocinaController extends Observable implements IObserver{
 
     @Override
     public void update(Observable pObservable, Object args) {
-        System.out.println("llegue a notificar luego de listo");
+        //System.out.println("llegue a notificar luego de listo");
         conectar((int)args);
         //ordenLista((int)args);       
     }
@@ -40,21 +40,21 @@ public class CocinaController extends Observable implements IObserver{
         orden.setLista(true); 
         try{
             Socket cocinaClient = new Socket("127.0.0.1", Constants.Constants.SALON_PORT2);
-            System.out.println("me contecte");
+            //System.out.println("me contecte");
             cocinaModel.setClient(cocinaClient);
             ObjectOutputStream output = new ObjectOutputStream(cocinaModel.getClient().getOutputStream());
             MensajeNotif mensajeNotif = new MensajeNotif();
             mensajeNotif.setMensaje(pNumOrden);
-            System.out.println("escribi el mensaje");
+            //System.out.println("escribi el mensaje");
             output.writeObject(mensajeNotif);  
             cocinaModel.setOutput(output);      
             //System.out.println("Intentando conectar");
             //System.out.println("no llega aqui");
             if(cocinaModel.getOutput() != null){    
                 //cocinaModel.getOutput().flush();
-                System.out.println("lo mando");
+                //System.out.println("lo mando");
                 output.flush();
-                System.out.println("reseteo");
+                //System.out.println("reseteo");
                 cocinaModel.setOutput(null);
             }
             output.close();
@@ -64,23 +64,6 @@ public class CocinaController extends Observable implements IObserver{
         }catch(Exception e){
             System.out.println(e);
         }   
-    }
-
-    private void ordenLista(int pNumOrden){
-        Orden orden = buscarOrden(pNumOrden);
-        orden.setLista(true); 
-        try{
-            ObjectOutputStream output = new ObjectOutputStream(cocinaModel.getClient().getOutputStream());
-            MensajeNotif mensajeNotif = new MensajeNotif();
-            mensajeNotif.setMensaje(pNumOrden);
-            System.out.println("escribi el mensaje");
-            output.writeObject(mensajeNotif);  
-            cocinaModel.setOutput(output);          
-        }catch(Exception e){
-            System.out.println(e);
-        }
-        // luego tengo que ver donde poner esto porque aqui no queda bien
-        eliminarOrden(pNumOrden);
     }
 
 
@@ -107,8 +90,9 @@ public class CocinaController extends Observable implements IObserver{
             
             // despues de conectarse mostramos la interfaz para que no se pegue
             // tiene que estar constantemente recibiendo las ordenes nuevas generadas
+            System.out.println("Se abrio COCINA_PORT");
             ServerSocket cocinaServer = new ServerSocket(Constants.Constants.COCINA_PORT);
-            //System.out.println("Esperando conexion");
+            System.out.println("Salon esta esperando conexion");
             Socket client = cocinaServer.accept();
             cocinaModel.setClient(client);
             cocinaModel.setCocinaServer(cocinaServer);
@@ -121,9 +105,10 @@ public class CocinaController extends Observable implements IObserver{
                     //System.out.println("aqui1");
                     MensajeOrden mensaje = (MensajeOrden) input.readObject();
                     //System.out.println("aqui2");
-                    //System.out.println("Cocina recibió una orden num: " + mensaje.getMensajeOrden().getNumMesa());
+                    System.out.println("Cocina recibió una orden num: " + mensaje.getMensajeOrden().getNumMesa());
                     ingresarOrden(mensaje.getMensajeOrden());
                     cocinaModel.setInput(null);
+                    
                 }
             }
         }catch(Exception e){
