@@ -144,6 +144,11 @@ public class GuiCocina extends Observable implements ActionListener, IObserver{
 
     }
 
+    public void actualizarInterfaz(){
+        panelOrdenes.validate();
+        panelOrdenes.repaint();
+    }
+
  
 
     private void actualizarOrdenes(){

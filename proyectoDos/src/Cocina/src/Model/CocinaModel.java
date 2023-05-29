@@ -1,6 +1,9 @@
 package Cocina.src.Model;
 
 import java.util.*;
+
+import Cocina.src.View.GuiCocina;
+
 import java.net.*;
 import java.io.*;
 public class CocinaModel{
@@ -9,6 +12,7 @@ public class CocinaModel{
     private Socket client;
     private ObjectOutputStream output;
     private ObjectInputStream input;
+    private GuiCocina guiCocina;
 
     public CocinaModel(){
         ordenesPendientes = new ArrayList<>(Constants.Constants.CANT_MESAS);
@@ -52,6 +56,14 @@ public class CocinaModel{
 
     public void setInput(ObjectInputStream input) {
         this.input = input;
+    }
+
+    public GuiCocina getGuiCocina() {
+        return guiCocina;
+    }
+
+    public void setGuiCocina(GuiCocina guiCocina) {
+        this.guiCocina = guiCocina;
     }
 
 

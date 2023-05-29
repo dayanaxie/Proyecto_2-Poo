@@ -118,6 +118,10 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
 
     }
 
+    public void actualizarInterfaz(){
+        panelMesas.validate();
+        panelMesas.repaint();
+    }
 
     @Override
     public void update(Observable pObservable, Object args) {

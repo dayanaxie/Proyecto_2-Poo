@@ -35,28 +35,18 @@ public class SalonController extends Observable implements IObserver{
         // este es para conectar con cocina
         try{
             Socket salonClient = new Socket("127.0.0.1", Constants.COCINA_PORT);
-            salonModel.setSalonClient(salonClient);
+            salonModel.setClientConnect(salonClient);
             mostrarInterfaz();
             while(true){
-                //System.out.println("Intentando conectar");
-                //System.out.println("no llega aqui");
                 if(salonModel.getOutput() != null){    
-                    //System.out.println("deberia de etrar aqui");
                     ObjectOutputStream output = salonModel.getOutput();
-                    //System.out.println("lo mando");
                     output.flush();
-                    //System.out.println("reseteo");
                     salonModel.setOutput(null);
-                    
                 }
-                
             }
         }catch(Exception e){
             System.out.println(e);
         }
-        
-        
-        
     }
 
 
@@ -67,8 +57,7 @@ public class SalonController extends Observable implements IObserver{
             ServerSocket salonServer = new ServerSocket(Constants.SALON_PORT2);
             System.out.println("Salon esta esperando conexion");
             Socket client = salonServer.accept();
-            System.out.println("SE CONECTOOOOOOOOOOOOOOOOOOOOO");
-            salonModel.setSalonClient(client);
+            salonModel.setClientAccept(client);
             salonModel.setSalonServer(salonServer);
             while(true){
                 if(client.getInputStream().available() > 0){                    
@@ -80,8 +69,7 @@ public class SalonController extends Observable implements IObserver{
                     salonModel.setInput(null);
                     // como cocina se desconecta despues de mandar el input hay que volverlo a aceptar
                     client = salonServer.accept();
-                    System.out.println("SE CONECTOOOOOOOOOOOOOOOOOOOOO");
-                    salonModel.setSalonClient(client);
+                    salonModel.setClientAccept(client);
                     salonModel.setSalonServer(salonServer);
                 }
                 
@@ -97,7 +85,7 @@ public class SalonController extends Observable implements IObserver{
         // este metodo se encarga de mandarle la orden generada a la cocina
         try{
             System.out.println("1" );
-            ObjectOutputStream output = new ObjectOutputStream(salonModel.getSalonClient().getOutputStream());
+            ObjectOutputStream output = new ObjectOutputStream(salonModel.getClientConnect().getOutputStream());
             System.out.println("2" );
             MensajeOrden mensaje = new MensajeOrden();
             mensaje.setMensajeOrden(pOrden);

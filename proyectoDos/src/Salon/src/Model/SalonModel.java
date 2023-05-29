@@ -7,6 +7,7 @@ import Constants.*;
 
 
 import Patterns.Observable;
+import Salon.src.View.*;;
 
 
 
@@ -16,9 +17,12 @@ public class SalonModel extends Observable {
     private ArrayList<Boolean> mesas;
     private String cuenta;
     private ServerSocket salonServer;
-    private Socket salonClient;
+    private Socket clientAccept;
+    private Socket clientConnect;
+
     private ObjectOutputStream output;
     private ObjectInputStream input;
+    GuiSalon guiSalon;
 
     public SalonModel(){
         mesas = new ArrayList<Boolean>();
@@ -40,14 +44,6 @@ public class SalonModel extends Observable {
 
     public void setCuenta(String cuenta) {
         this.cuenta = cuenta;
-    }
-
-    public Socket getSalonClient() {
-        return salonClient;
-    }
-
-    public void setSalonClient(Socket salonClient) {
-        this.salonClient = salonClient;
     }
 
     public ObjectOutputStream getOutput() {
@@ -72,6 +68,30 @@ public class SalonModel extends Observable {
 
     public void setSalonServer(ServerSocket salonServer) {
         this.salonServer = salonServer;
+    }
+
+    public GuiSalon getGuiSalon() {
+        return guiSalon;
+    }
+
+    public void setGuiSalon(GuiSalon guiSalon) {
+        this.guiSalon = guiSalon;
+    }
+
+    public Socket getClientAccept() {
+        return clientAccept;
+    }
+
+    public void setClientAccept(Socket clientAccept) {
+        this.clientAccept = clientAccept;
+    }
+
+    public Socket getClientConnect() {
+        return clientConnect;
+    }
+
+    public void setClientConnect(Socket clientConnect) {
+        this.clientConnect = clientConnect;
     }
 
 

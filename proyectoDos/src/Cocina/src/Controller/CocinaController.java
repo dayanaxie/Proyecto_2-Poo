@@ -1,6 +1,5 @@
 package Cocina.src.Controller;
 
-import java.util.Random;
 
 import Cocina.src.Model.CocinaModel;
 import Cocina.src.Model.Orden;
@@ -45,11 +44,8 @@ public class CocinaController extends Observable implements IObserver{
             ObjectOutputStream output = new ObjectOutputStream(cocinaModel.getClient().getOutputStream());
             MensajeNotif mensajeNotif = new MensajeNotif();
             mensajeNotif.setMensaje(pNumOrden);
-            //System.out.println("escribi el mensaje");
             output.writeObject(mensajeNotif);  
             cocinaModel.setOutput(output);      
-            //System.out.println("Intentando conectar");
-            //System.out.println("no llega aqui");
             if(cocinaModel.getOutput() != null){    
                 //cocinaModel.getOutput().flush();
                 //System.out.println("lo mando");
@@ -92,7 +88,7 @@ public class CocinaController extends Observable implements IObserver{
             // tiene que estar constantemente recibiendo las ordenes nuevas generadas
             System.out.println("Se abrio COCINA_PORT");
             ServerSocket cocinaServer = new ServerSocket(Constants.Constants.COCINA_PORT);
-            System.out.println("Salon esta esperando conexion");
+            System.out.println("Cocina esta esperando conexion");
             Socket client = cocinaServer.accept();
             cocinaModel.setClient(client);
             cocinaModel.setCocinaServer(cocinaServer);
