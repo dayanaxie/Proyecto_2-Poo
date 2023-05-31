@@ -16,7 +16,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import Patterns.*;
 import Patterns.Observable;
-import Cocina.src.Model.Orden;
+import Cocina.src.Model.OrdenModel;
 
 import javax.swing.JTextArea;
 
@@ -67,7 +67,7 @@ public class GuiCocina extends Observable implements ActionListener, IObserver{
 
     @Override
     public void update(Observable pObservable, Object args) {
-        ingresarOrden((Orden)args);       
+        ingresarOrden((OrdenModel)args);       
     }
 
     private void ordenLista(int pNumOrden){
@@ -104,7 +104,7 @@ public class GuiCocina extends Observable implements ActionListener, IObserver{
         return foundTextArea;
     }
 
-    private void ingresarOrden(Orden pOrden){
+    private void ingresarOrden(OrdenModel pOrden){
         Border border = BorderFactory.createLineBorder(Color.black, 1);
         String texto = "Numero de Orden: " + pOrden.getNumMesa() + "\nAqui vamos a mostrar la orden: ";
         JTextArea textArea = new JTextArea(texto);

@@ -2,12 +2,12 @@ package Cocina.src.Model;
 import java.io.Serializable;
 
 
-public class Orden implements Serializable{
+public class OrdenModel implements Serializable{
     private Boolean lista;
     private int numMesa;
     // tiene que tener la hamburguesa
 
-    public Orden(int pNumMesa){
+    public OrdenModel(int pNumMesa){
         lista = false;
         numMesa = pNumMesa;
     }

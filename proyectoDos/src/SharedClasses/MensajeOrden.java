@@ -1,24 +1,24 @@
 package SharedClasses;
 
 import java.io.Serializable;
-import Cocina.src.Model.Orden;
+import Cocina.src.Model.OrdenModel;
 
 //este es para cuando salon tiene que pasarle las ordenes a cocina
 
 
 public class MensajeOrden implements Serializable{
-    Orden msjOrden;
+    OrdenModel msjOrden;
 
     public MensajeOrden(){
  
     }
 
-    public void setMensajeOrden(Orden pOrden){
+    public void setMensajeOrden(OrdenModel pOrden){
         msjOrden = pOrden;
 
     }
 
-    public Orden getMensajeOrden(){
+    public OrdenModel getMensajeOrden(){
         return msjOrden;
     }
 

@@ -7,7 +7,7 @@ import Cocina.src.View.GuiCocina;
 import java.net.*;
 import java.io.*;
 public class CocinaModel{
-    ArrayList<Orden> ordenesPendientes;
+    ArrayList<OrdenModel> ordenesPendientes;
     private ServerSocket cocinaServer;
     private Socket client;
     private ObjectOutputStream output;
@@ -18,11 +18,11 @@ public class CocinaModel{
         ordenesPendientes = new ArrayList<>(Constants.Constants.CANT_MESAS);
     }
 
-    public ArrayList<Orden> getOrdenesPendientes() {
+    public ArrayList<OrdenModel> getOrdenesPendientes() {
         return ordenesPendientes;
     }
 
-    public void setOrdenesPendientes(ArrayList<Orden> ordenesPendientes) {
+    public void setOrdenesPendientes(ArrayList<OrdenModel> ordenesPendientes) {
         this.ordenesPendientes = ordenesPendientes;
     }
 

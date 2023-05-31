@@ -2,7 +2,7 @@ package Cocina.src.Controller;
 
 
 import Cocina.src.Model.CocinaModel;
-import Cocina.src.Model.Orden;
+import Cocina.src.Model.OrdenModel;
 import Cocina.src.View.GuiCocina;
 import SharedClasses.MensajeNotif;
 import SharedClasses.MensajeOrden;
@@ -35,7 +35,7 @@ public class CocinaController extends Observable implements IObserver{
         // este es para conectar con salon
 
         // esto realmente creo que se podria quitar
-        Orden orden = buscarOrden(pNumOrden);
+        OrdenModel orden = buscarOrden(pNumOrden);
         orden.setLista(true); 
         try{
             Socket cocinaClient = new Socket("127.0.0.1", Constants.Constants.SALON_PORT2);
@@ -63,9 +63,9 @@ public class CocinaController extends Observable implements IObserver{
     }
 
 
-    private Orden buscarOrden(int pNumOrden){
-        Orden ordenEncontrada = new Orden(pNumOrden);
-        for(Orden orden : cocinaModel.getOrdenesPendientes()){
+    private OrdenModel buscarOrden(int pNumOrden){
+        OrdenModel ordenEncontrada = new OrdenModel(pNumOrden);
+        for(OrdenModel orden : cocinaModel.getOrdenesPendientes()){
             if(orden.getNumMesa() == pNumOrden){
                 ordenEncontrada = orden;
                 break;
@@ -76,7 +76,7 @@ public class CocinaController extends Observable implements IObserver{
 
 
     private void eliminarOrden(int pNumOrden){
-        Orden orden = buscarOrden(pNumOrden);
+        OrdenModel orden = buscarOrden(pNumOrden);
         cocinaModel.getOrdenesPendientes().remove(orden);
     }
 
@@ -112,7 +112,7 @@ public class CocinaController extends Observable implements IObserver{
         }
     }
 
-    private void ingresarOrden(Orden pOrden){
+    private void ingresarOrden(OrdenModel pOrden){
         //System.out.println(pOrden.getNumMesa() + " " + cocinaModel.getOrdenesPendientes().size());
         cocinaModel.getOrdenesPendientes().add(pOrden);
         notifyObservers(pOrden);

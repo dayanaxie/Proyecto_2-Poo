@@ -14,13 +14,12 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import java.awt.Image;
 
-
 import java.util.*;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 
-import Cocina.src.Model.Orden;
+import Cocina.src.Model.OrdenModel;
 import Patterns.*;
 import Patterns.Observable;
 
@@ -78,7 +77,7 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
             System.out.println("seleciono " + mesasComboBox.getSelectedItem());
             if(mesasComboBox.getSelectedItem() != null){
                 //Orden orden = new Orden(Integer.parseInt(mesasComboBox.getSelectedItem()));
-                Orden orden = new Orden((int)mesasComboBox.getSelectedItem());
+                OrdenModel orden = new OrdenModel((int)mesasComboBox.getSelectedItem());
                 //System.out.println("cree la orden");
                 // falta agregarle lo que pidio a la hamburguesa antes de mandar la orden
                 notifyObservers(orden);

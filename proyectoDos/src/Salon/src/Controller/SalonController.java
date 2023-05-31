@@ -1,6 +1,6 @@
 package Salon.src.Controller;
 
-import Cocina.src.Model.Orden;
+import Cocina.src.Model.OrdenModel;
 import Patterns.Observable;
 import Patterns.*;
 
@@ -81,7 +81,7 @@ public class SalonController extends Observable implements IObserver{
     }
 
     
-    public void ingresarOrden(Orden pOrden){
+    public void ingresarOrden(OrdenModel pOrden){
         // este metodo se encarga de mandarle la orden generada a la cocina
         try{
             System.out.println("1" );
@@ -123,7 +123,7 @@ public class SalonController extends Observable implements IObserver{
     @Override
     public void update(Observable pObservable, Object args) {
         //System.out.println("llego a update");
-        ingresarOrden((Orden)args);
+        ingresarOrden((OrdenModel)args);
         
     }
 
