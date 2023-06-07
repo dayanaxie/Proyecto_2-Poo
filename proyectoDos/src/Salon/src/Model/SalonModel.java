@@ -3,7 +3,6 @@ package Salon.src.Model;
 import java.util.*;
 import java.net.*;
 import java.io.*;
-import Constants.*;
 
 
 import Patterns.Observable;
@@ -12,21 +11,22 @@ import Salon.src.View.*;;
 
 
 public class SalonModel extends Observable {
-    // creo que los models deberian de tener los gui
-
+    private Random rand;
     private ArrayList<Boolean> mesas;
-    private String cuenta;
-    private ServerSocket salonServer;
-    private Socket clientAccept;
+    private ServerSocket salonPort;
+    private ServerSocket salonPort2;
+    private Socket clientAcceptCocina;
+    private Socket clientAcceptSimulacion;
     private Socket clientConnect;
 
     private ObjectOutputStream output;
-    private ObjectInputStream input;
+    private ObjectInputStream inputCocina;
+    private ObjectInputStream inputSimulacion;
     GuiSalon guiSalon;
 
     public SalonModel(){
         mesas = new ArrayList<Boolean>();
-        cuenta = "";
+        rand = new Random(134564);
         
     }
 
@@ -38,14 +38,6 @@ public class SalonModel extends Observable {
         this.mesas = mesas;
     }
 
-    public String getCuenta() {
-        return cuenta;
-    }
-
-    public void setCuenta(String cuenta) {
-        this.cuenta = cuenta;
-    }
-
     public ObjectOutputStream getOutput() {
         return output;
     }
@@ -54,20 +46,23 @@ public class SalonModel extends Observable {
         this.output = output;
     }
 
-    public ObjectInputStream getInput() {
-        return input;
+   
+
+
+    public ObjectInputStream getInputCocina() {
+        return inputCocina;
     }
 
-    public void setInput(ObjectInputStream input) {
-        this.input = input;
+    public void setInputCocina(ObjectInputStream inputCocina) {
+        this.inputCocina = inputCocina;
     }
 
-    public ServerSocket getSalonServer() {
-        return salonServer;
+    public ObjectInputStream getInputSimulacion() {
+        return inputSimulacion;
     }
 
-    public void setSalonServer(ServerSocket salonServer) {
-        this.salonServer = salonServer;
+    public void setInputSimulacion(ObjectInputStream inputSimulacion) {
+        this.inputSimulacion = inputSimulacion;
     }
 
     public GuiSalon getGuiSalon() {
@@ -78,13 +73,7 @@ public class SalonModel extends Observable {
         this.guiSalon = guiSalon;
     }
 
-    public Socket getClientAccept() {
-        return clientAccept;
-    }
 
-    public void setClientAccept(Socket clientAccept) {
-        this.clientAccept = clientAccept;
-    }
 
     public Socket getClientConnect() {
         return clientConnect;
@@ -92,6 +81,46 @@ public class SalonModel extends Observable {
 
     public void setClientConnect(Socket clientConnect) {
         this.clientConnect = clientConnect;
+    }
+
+    public ServerSocket getSalonPort() {
+        return salonPort;
+    }
+
+    public void setSalonPort(ServerSocket salonPort) {
+        this.salonPort = salonPort;
+    }
+
+    public ServerSocket getSalonPort2() {
+        return salonPort2;
+    }
+
+    public void setSalonPort2(ServerSocket salonPort2) {
+        this.salonPort2 = salonPort2;
+    }
+
+    public Socket getClientAcceptCocina() {
+        return clientAcceptCocina;
+    }
+
+    public void setClientAcceptCocina(Socket clientAcceptCocina) {
+        this.clientAcceptCocina = clientAcceptCocina;
+    }
+
+    public Socket getClientAcceptSimulacion() {
+        return clientAcceptSimulacion;
+    }
+
+    public void setClientAcceptSimulacion(Socket clientAcceptSimulacion) {
+        this.clientAcceptSimulacion = clientAcceptSimulacion;
+    }
+
+    public Random getRand() {
+        return rand;
+    }
+
+    public void setRand(Random rand) {
+        this.rand = rand;
     }
 
 

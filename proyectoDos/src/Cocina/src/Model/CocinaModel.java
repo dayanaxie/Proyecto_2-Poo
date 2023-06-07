@@ -3,6 +3,7 @@ package Cocina.src.Model;
 import java.util.*;
 
 import Cocina.src.View.GuiCocina;
+import SharedClasses.OrdenModel;
 
 import java.net.*;
 import java.io.*;

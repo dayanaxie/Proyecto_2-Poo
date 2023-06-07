@@ -18,21 +18,15 @@ import java.util.*;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
-
-import Cocina.src.Model.OrdenModel;
 import Patterns.*;
 import Patterns.Observable;
+import SharedClasses.Hamburguesa;
+import SharedClasses.OrdenModel;
 
 
-// usar los botones para simular las mesas
-// que el boton diga "pagar" 
 // mesa verde: se puede pagar (generar cuenta) cuando se aprete pagar aparezca la cuenta
 // mesa roja ocupada
 // mesa blanca esta libre
-
-
-// me falta que venga el numero de mesa el pedido
-
 
 public class GuiSalon extends Observable implements ActionListener, IObserver{
     JFrame ventanaSalon;
@@ -42,10 +36,9 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
     JButton botonEnviar;
     ArrayList<JButton> listMesas;
     JComboBox<String> predefBurgsCB;
-    JComboBox<String> jamonComboBox;
-    JComboBox<String> tortaComboBox;
+    JComboBox<String> extra1ComboBox;
+    JComboBox<String> extra2ComboBox;
     JComboBox<Integer> mesasComboBox;
-    
     
 
     public GuiSalon(){
@@ -53,7 +46,6 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
         ventanaSalon.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventanaSalon.setExtendedState(JFrame.MAXIMIZED_BOTH);
         agregarComponentes();
-
         ventanaSalon.pack();
         ventanaSalon.setVisible(true);
     }
@@ -64,7 +56,6 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
         panelColores = new JPanel();
         representarColores();
         ventanaSalon.add(panelColores, BorderLayout.NORTH);
-
         crearMesas();
         ventanaSalon.add(panelMesas, BorderLayout.CENTER);
         crearOrdenManual();
@@ -74,15 +65,20 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource().equals(botonEnviar)){
-            System.out.println("seleciono " + mesasComboBox.getSelectedItem());
             if(mesasComboBox.getSelectedItem() != null){
-                //Orden orden = new Orden(Integer.parseInt(mesasComboBox.getSelectedItem()));
+                Hamburguesa hamburguesa = new Hamburguesa();
+                hamburguesa.crearHamburguesa((String)predefBurgsCB.getSelectedItem());
+                if((String)extra1ComboBox.getSelectedItem() != "Elegir extra"){
+                    hamburguesa.getHamburguesa().add((String)extra1ComboBox.getSelectedItem());
+                }if ((String)extra2ComboBox.getSelectedItem() != "Elegir extra"){
+                    hamburguesa.getHamburguesa().add((String)extra2ComboBox.getSelectedItem());
+                }
                 OrdenModel orden = new OrdenModel((int)mesasComboBox.getSelectedItem());
-                //System.out.println("cree la orden");
-                // falta agregarle lo que pidio a la hamburguesa antes de mandar la orden
-                notifyObservers(orden);
-                //System.out.println("termine de notificar");
+
+                orden.setHamburguesa(hamburguesa);
+                notifyObservers(orden, false);
                 mesaOcupada(orden.getNumMesa());
+                guardarFactura(orden.getNumMesa(), orden.getPrecio());
                 updateNumeroMesa(); //esto es para actualizar las mesas disponibles
             }
             
@@ -94,9 +90,7 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
                 Image image = imageIcon.getImage();
                 Image resizedImage = image.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
                 Icon icon = new ImageIcon(resizedImage);
-                //hay que conseguir un string de la factura y pasarla
-                String string = "aqui vamos a mostrar la factura";
-                //JOptionPane.showMessageDialog(ventanaSalon, string);
+                String string = button.getName();
                 Object[] options = {"Pagar"};
                 int option = JOptionPane.showOptionDialog(ventanaSalon,
                 string,"Factura",
@@ -106,10 +100,9 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
                 options,
                 options[0]);
 
-                // luego de mostrar la factura, libreamos la mesa
                 liberarMesa(button);
                 updateNumeroMesa();
-
+                notifyObservers(Integer.parseInt(button.getActionCommand()), true);
 
             }
 
@@ -117,39 +110,36 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
 
     }
 
-    public void actualizarInterfaz(){
-        panelMesas.validate();
-        panelMesas.repaint();
+    @Override
+    public void update(Observable pObservable, Object args, Object flag) {
+        if(flag instanceof Integer){
+            mesaOcupada((int)args);
+            guardarFactura((int)args, (int)flag);
+            updateNumeroMesa();
+        }else{
+            mesaFacturar((int)args);
+        }
     }
 
-    @Override
-    public void update(Observable pObservable, Object args) {
-        //System.out.println("llego a update" );
-        mesaFacturar((int)args);
-        
+    private void guardarFactura(int pNum, int pFactura){
+        JButton boton = listMesas.get(pNum);
+        boton.setName("₡ " + Integer.toString(pFactura));
     }
 
     private void liberarMesa(JButton pButton){
-        //JButton boton = listMesas.get(pNum);
         pButton.setBackground(Color.white);
-
+        pButton.setName(null);
     }
 
     private void mesaOcupada(int pNum){
         JButton boton = listMesas.get(pNum);
         boton.setBackground(Color.red);
+        
     }
 
     private void mesaFacturar(int pNum){
-
-        System.out.println("VOY A FACTURAR LA MESA: " + pNum );
         JButton boton = listMesas.get(pNum);
         boton.setBackground(Color.green);
-
-    }
-
-    private void generarCuenta(){
-
     }
 
     private void representarColores(){
@@ -183,21 +173,12 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
         for(int index = 0; index < Constants.Constants.CANT_MESAS; ++index) {
             JButton boton = new JButton("Mesa " + index);
             boton.setBackground(Color.white);
-            // para guardar el numero de mesa
             boton.setActionCommand(Integer.toString(index));
             boton.addActionListener(this);
 
             listMesas.add(index, boton);
             panelMesas.add(boton);
         }
-
-        //JButton boton =  listMesas.get(0);
-        //boton.setBackground(Color.GREEN);
-       // boton =  listMesas.get(2);
-        //boton.setBackground(Color.GREEN);
-        //boton =  listMesas.get(5);
-        //boton.setBackground(Color.GREEN);
-
     }
 
     private void crearOrdenManual(){
@@ -209,7 +190,6 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
         pedidoPredef();
         pedidoPers();
         pedirNumeroMesa();
-        
         botonEnviar = new JButton("Enviar");
         botonEnviar.setForeground(Color.WHITE);
         botonEnviar.setBackground(Color.red);
@@ -218,7 +198,7 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
     }
 
     private void pedidoPredef(){
-        String burgPredefList[] = { "Elegir Hamburguesa","Hamburguesa 1", "Hamburguesa 2", "Hamburguesa 3"};
+        String burgPredefList[] = { "Elegir Hamburguesa","Hamburguesa doble torta", "Hamburguesa con bacon", "Hamburguesa con queso", "Hamburguesa Especial", "Hamburguesa Clasica", "Hamburguesa Base"};
         predefBurgsCB = new JComboBox<String>(burgPredefList);
         panelIngresoPedidos.add(predefBurgsCB);
     }
@@ -227,13 +207,12 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
         JLabel labelIngredientes = new JLabel("Ingredientes a agregar:");
         labelIngredientes.setHorizontalAlignment(SwingConstants.CENTER);
         panelIngresoPedidos.add(labelIngredientes);
-        // digamos que solo pueden agegar max 5 de cada ingrediente
-        String jamonList[] = { "Elegir Cantidad de Jamon","1 Jamon", "2 Jamon", "3 Jamon", "4 Jamon", "5 Jamon"};
-        jamonComboBox = new JComboBox<String>(jamonList);
-        panelIngresoPedidos.add(jamonComboBox);
-        String tortaList[] = { "Elegir Cantidad de Torta","1 Torta", "2 Torta", "3 Torta", "4 Torta", "5 Torta"};
-        tortaComboBox = new JComboBox<String>(tortaList);
-        panelIngresoPedidos.add(tortaComboBox);
+        String extra1List[] = { "Elegir extra","pepinillos", "torta", "queso", "salsa ranch", "tomate", "aguacate", "cebolla", "jalapeños"};
+        extra1ComboBox = new JComboBox<String>(extra1List);
+        panelIngresoPedidos.add(extra1ComboBox);
+        String extra2List[] = { "Elegir extra","pepinillos", "torta", "queso", "salsa ranch", "tomate", "aguacate", "cebolla", "jalapeños"};
+        extra2ComboBox = new JComboBox<String>(extra2List);
+        panelIngresoPedidos.add(extra2ComboBox);
     }
 
     private void pedirNumeroMesa(){
@@ -251,8 +230,6 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
         for(Integer num : mesasDisponibles){
             mesasComboBox.addItem(num);
         }
-
-
     }
 
     private Integer [] mesasDisponibles(){
@@ -267,7 +244,5 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
         return mesasDisponibles;
     }
 
- 
 
-    
 }

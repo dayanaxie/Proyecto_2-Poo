@@ -1,7 +1,7 @@
 package SharedClasses;
 
 import java.io.Serializable;
-import Cocina.src.Model.OrdenModel;
+import java.util.*;
 
 //este es para cuando salon tiene que pasarle las ordenes a cocina
 
@@ -21,6 +21,16 @@ public class MensajeOrden implements Serializable{
     public OrdenModel getMensajeOrden(){
         return msjOrden;
     }
+
+    public void mostrarOrden(){
+        System.out.println("Ingredientes de la hamburguesa: ");
+        for(String ingrediente : msjOrden.getHamburguesa().getHamburguesa()){
+            System.out.println(ingrediente);
+        }
+        
+    }
+
+
 
 
 

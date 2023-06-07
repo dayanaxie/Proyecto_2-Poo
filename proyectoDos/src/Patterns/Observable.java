@@ -17,9 +17,9 @@ public abstract class Observable {
 		observers.remove(pObservable);
 	}
 	
-	public void notifyObservers(Object pValue) {
+	public void notifyObservers(Object pValue, Object pFlag) {
 		for(IObserver observer : observers) {
-			observer.update(this, pValue);
+			observer.update(this, pValue, pFlag);
 		}
 	}
     

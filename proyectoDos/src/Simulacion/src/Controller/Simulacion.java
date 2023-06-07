@@ -1,7 +1,9 @@
 package Simulacion.src.Controller;
 
 import Salon.src.Model.SalonModel;
-import Cocina.src.Model.Hamburguesa;
+import SharedClasses.Hamburguesa;
+import SharedClasses.MensajeOrden;
+import SharedClasses.OrdenModel;
 
 import java.util.*;
 import java.net.*;
@@ -9,23 +11,22 @@ import java.io.*;
 
 import Constants.*;
 
-public class SimulacionController extends SalonModel{
-    private SalonModel salonModel;
+public class Simulacion extends SalonModel{
     private Random rand;
     private Hamburguesa hamburguesa;
-
-    String str;
     Socket client;
     ObjectOutputStream output;
     
-    public SimulacionController(){
-        salonModel = new SalonModel();
+    public Simulacion(){
+        System.out.println("--------------------SIMULACION--------------------");
+        rand = new Random(134564);
+        hamburguesa = new Hamburguesa();
         Thread conectarServer = new Thread(() -> conectar());
         conectarServer.start();
     }
 
     public void crearHamburguesaRandom(){
-        int hamburguesaRand = 0 + rand.nextInt(5);
+        int hamburguesaRand = 0 + rand.nextInt(6);
         String nombre = "";
         ArrayList<String> ingredientes = new ArrayList<String>();
         switch(hamburguesaRand){
@@ -104,23 +105,25 @@ public class SimulacionController extends SalonModel{
 
     public void conectar(){
         // este es para conectar con salon
-        str = "se conecto";
         try{
-            client = new Socket("127.0.0.1", Constants.SALON_PORT2);
-            salonModel.setClientConnect(client);
-            output = new ObjectOutputStream(client.getOutputStream());
-            output.writeObject(str);
-            output.flush();
-            output.close();
-            client.close();
-           // mostrarInterfaz();
-           // while(true){
-            //    if(salonModel.getOutput() != null){    
-             //       ObjectOutputStream output = salonModel.getOutput();
-              //      output.flush();
-               //     salonModel.setOutput(null);
-                //}
-           // }
+            client = new Socket("127.0.0.1", Constants.SALON_PORT);
+            while(true){
+                crearHamburguesaRandom();
+                // va a mandar ordenes y ya despues salon se encarga de darle la mesa
+                OrdenModel orden = new OrdenModel();
+                orden.setHamburguesa(hamburguesa);
+                output = new ObjectOutputStream(client.getOutputStream());
+                MensajeOrden mensaje = new MensajeOrden();
+                System.out.println("Se creo la hamburguesa con: ");
+                mensaje.setMensajeOrden(orden);
+                mensaje.mostrarOrden();
+                output.writeObject(mensaje);
+                output.flush();
+                int time = (4 + rand.nextInt(15)) * 1000;
+                Thread.sleep(time);
+
+
+            }
         }catch(Exception e){
             System.out.println(e);
         }

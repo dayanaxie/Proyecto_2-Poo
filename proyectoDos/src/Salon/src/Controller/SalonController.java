@@ -1,6 +1,5 @@
 package Salon.src.Controller;
 
-import Cocina.src.Model.OrdenModel;
 import Patterns.Observable;
 import Patterns.*;
 
@@ -8,132 +7,158 @@ import Salon.src.Model.SalonModel;
 import Salon.src.View.GuiSalon;
 import SharedClasses.MensajeNotif;
 import SharedClasses.MensajeOrden;
+import SharedClasses.OrdenModel;
 
 import java.util.*;
 import java.net.*;
 import java.io.*;
 
-
 import Constants.*;
 
-// tengo que preguntar si debe de haber una conexion entre
-// cocina y salon, xq salon le debe de mandar las ordenes ingresadas a cocina
-
-public class SalonController extends Observable implements IObserver{
+public class SalonController extends Observable implements IObserver {
     private SalonModel salonModel;
 
-    public SalonController(){
+    public SalonController() {
+        System.out.println("--------------------SALON--------------------");
         salonModel = new SalonModel();
-        Thread abrirServer = new Thread(() -> abrirConexion());
-        abrirServer.start();
+        iniciarMesas();
+        Thread abrirServerCocina = new Thread(() -> abrirConexionCocina());
+        abrirServerCocina.start();
         Thread conectarServer = new Thread(() -> conectar());
         conectarServer.start();
+        Thread abrirServerSimulacion = new Thread(() -> abrirConexionSimulacion());
+        abrirServerSimulacion.start();
     }
 
-    public void conectar(){
-        
+    public void conectar() {
         // este es para conectar con cocina
-        try{
+        try {
             Socket salonClient = new Socket("127.0.0.1", Constants.COCINA_PORT);
             salonModel.setClientConnect(salonClient);
             mostrarInterfaz();
-            while(true){
-                if(salonModel.getOutput() != null){    
+            while (true) {
+                if (salonModel.getOutput() != null) {
                     ObjectOutputStream output = salonModel.getOutput();
                     output.flush();
                     salonModel.setOutput(null);
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
     }
 
-
-    private void abrirConexion(){
+    private void abrirConexionCocina() {
         // este es para que cocina se conecte a salon
-        try{
+        try {
             System.out.println("Se abrio SALON_PORT2");
             ServerSocket salonServer = new ServerSocket(Constants.SALON_PORT2);
-            System.out.println("Salon esta esperando conexion");
+            System.out.println("Salon esta esperando conexion de cocina");
             Socket client = salonServer.accept();
-            salonModel.setClientAccept(client);
-            salonModel.setSalonServer(salonServer);
-            while(true){
-                if(client.getInputStream().available() > 0){                    
-                    System.out.println("Salon recibió la notificación de facturar la mesa: " );
+            salonModel.setClientAcceptCocina(client);
+            salonModel.setSalonPort2(salonServer);
+            while (true) {
+                if (client.getInputStream().available() > 0) {
                     ObjectInputStream input = new ObjectInputStream(client.getInputStream());
                     MensajeNotif mensaje = (MensajeNotif) input.readObject();
-                    System.out.println(mensaje.getMensaje());
-                    notifyObservers(mensaje.getMensaje());
-                    salonModel.setInput(null);
-                    // como cocina se desconecta despues de mandar el input hay que volverlo a aceptar
+                    System.out.println("Salon recibió la notificación de facturar la mesa: " + mensaje.getMensaje());
+                    notifyObservers(mensaje.getMensaje(), false);
+                    salonModel.setInputCocina(null);
                     client = salonServer.accept();
-                    salonModel.setClientAccept(client);
-                    salonModel.setSalonServer(salonServer);
+                    salonModel.setClientAcceptCocina(client);
+                    salonModel.setSalonPort2(salonServer);
                 }
-                
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
 
     }
 
-    
-    public void ingresarOrden(OrdenModel pOrden){
+    private void iniciarMesas() {
+        ArrayList<Boolean> mesas = salonModel.getMesas();
+        for (int index = 0; index < Constants.CANT_MESAS; ++index) {
+            mesas.add(false);
+        }
+
+    }
+
+    private void abrirConexionSimulacion() {
+        // este es para que cocina se conecte a salon
+        try {
+            System.out.println("Se abrio SALON_PORT");
+            ServerSocket salonServer = new ServerSocket(Constants.SALON_PORT);
+            System.out.println("Salon esta esperando conexion de simulacion");
+            Socket client = salonServer.accept();
+            salonModel.setClientAcceptSimulacion(client);
+            salonModel.setSalonPort(salonServer);
+            while (true) {
+                if (client.getInputStream().available() > 0) {
+                    System.out.println("Salon recibió la orden de simulacion");
+                    ObjectInputStream input = new ObjectInputStream(client.getInputStream());
+                    MensajeOrden mensaje = (MensajeOrden) input.readObject();
+                    mensaje.mostrarOrden();
+                    mensaje.getMensajeOrden().setNumMesa(asignarMesa());
+                    ingresarOrden(mensaje.getMensajeOrden());
+                    notifyObservers(mensaje.getMensajeOrden().getNumMesa(), mensaje.getMensajeOrden().getPrecio());
+                    salonModel.setInputSimulacion(null);
+                }
+
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+    }
+
+    private void libreraMesa(int mesa) {
+        salonModel.getMesas().set(mesa, false);
+
+    }
+
+    private int asignarMesa() {
+        int mesa = 0;
+        Random rand = salonModel.getRand();
+        int num = 0 + rand.nextInt(Constants.CANT_MESAS);
+        while(true){
+            if (!salonModel.getMesas().get(num)) {
+                mesa = num;
+                salonModel.getMesas().set(num, true);
+                break;
+            }
+        }
+        return mesa;
+    }
+
+    public void ingresarOrden(OrdenModel pOrden) {
         // este metodo se encarga de mandarle la orden generada a la cocina
-        try{
-            System.out.println("1" );
+        try {
             ObjectOutputStream output = new ObjectOutputStream(salonModel.getClientConnect().getOutputStream());
-            System.out.println("2" );
             MensajeOrden mensaje = new MensajeOrden();
             mensaje.setMensajeOrden(pOrden);
-            System.out.println("3" );
             output.writeObject(mensaje);
-            System.out.println("4" );
             salonModel.setOutput(output);
-            System.out.println("Se ingreso la orden !!!!!!" );
-        }catch(Exception e){
-            System.out.println("El problema esta en ingresar orden" );
+            salonModel.getMesas().set(pOrden.getNumMesa(), true);
+        } catch (Exception e) {
             System.out.println(e);
         }
-        
-
     }
 
-    public String generarCuenta(){
-        return salonModel.getCuenta();
-
-        // va a devolver un string con las hamburguesas pedidas y su precio y el
-        // total como un string para mostrar en la interfaz
-    }
-
-    public void liberarMesa(){
-        //puede haber un arraylist de booleanos y que el index del array sea el 
-        // numero de mesa
-
-    }
-
-    public void crearOrdenManual(){
-        // esto tengo que pensarlo mas
-    }
-
-    
     @Override
-    public void update(Observable pObservable, Object args) {
-        //System.out.println("llego a update");
-        ingresarOrden((OrdenModel)args);
-        
+    public void update(Observable pObservable, Object args, Object flag) {
+        if((Boolean) flag){
+            libreraMesa((int) args);
+        }else{
+            ingresarOrden((OrdenModel) args);
+        }        
     }
 
-    private void mostrarInterfaz(){
-        GuiSalon guiSalon = new GuiSalon();
+    private void mostrarInterfaz() {
+        GuiSalon guiSalon = salonModel.getGuiSalon();
+        guiSalon = new GuiSalon();
         guiSalon.addObserver(this);
         addObserver(guiSalon);
 
     }
 
-    
-    
 }
