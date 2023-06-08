@@ -65,6 +65,7 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource().equals(botonEnviar)){
+            // para enviar la orden manual creada
             if(mesasComboBox.getSelectedItem() != null){
                 Hamburguesa hamburguesa = new Hamburguesa();
                 hamburguesa.crearHamburguesa((String)predefBurgsCB.getSelectedItem());
@@ -77,15 +78,18 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
 
                 orden.setHamburguesa(hamburguesa);
                 notifyObservers(orden, false);
+                // se actualiza la interfaz
                 mesaOcupada(orden.getNumMesa());
                 guardarFactura(orden.getNumMesa(), orden.getPrecio());
                 updateNumeroMesa(); //esto es para actualizar las mesas disponibles
             }
             
         }else{
+
             JButton button = (JButton) e.getSource();
             Color color = button.getBackground();
             if(color == Color.green){
+                // si se presiona el boton para facturar la mesa
                 ImageIcon imageIcon = new ImageIcon("Imagen/cubo.png");
                 Image image = imageIcon.getImage();
                 Image resizedImage = image.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
@@ -100,6 +104,7 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
                 options,
                 options[0]);
 
+                // una vez pagado se librera la mesa
                 liberarMesa(button);
                 updateNumeroMesa();
                 notifyObservers(Integer.parseInt(button.getActionCommand()), true);
@@ -112,11 +117,14 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
 
     @Override
     public void update(Observable pObservable, Object args, Object flag) {
+        
         if(flag instanceof Integer){
+            // flag seria la factura de la mesa
             mesaOcupada((int)args);
             guardarFactura((int)args, (int)flag);
             updateNumeroMesa();
         }else{
+            // sino entonces seria un booleano y se manda a facturar la mesa
             mesaFacturar((int)args);
         }
     }
@@ -233,6 +241,7 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
     }
 
     private Integer [] mesasDisponibles(){
+        // obtener las mesas disponibles actualmente
         Integer mesasDisponibles[] = new Integer[Constants.Constants.CANT_MESAS];
         int index = 0;
         for(JButton boton : listMesas){

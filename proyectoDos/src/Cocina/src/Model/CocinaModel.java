@@ -8,7 +8,7 @@ import SharedClasses.OrdenModel;
 import java.net.*;
 import java.io.*;
 public class CocinaModel{
-    ArrayList<OrdenModel> ordenesPendientes;
+    private ArrayList<OrdenModel> ordenesPendientes;
     private ServerSocket cocinaServer;
     private Socket client;
     private ObjectOutputStream output;

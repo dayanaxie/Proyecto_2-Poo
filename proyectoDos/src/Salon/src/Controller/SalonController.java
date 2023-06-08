@@ -84,7 +84,7 @@ public class SalonController extends Observable implements IObserver {
     }
 
     private void abrirConexionSimulacion() {
-        // este es para que cocina se conecte a salon
+        // este es para que simulacion se conecte a salon
         try {
             System.out.println("Se abrio SALON_PORT");
             ServerSocket salonServer = new ServerSocket(Constants.SALON_PORT);
@@ -131,7 +131,7 @@ public class SalonController extends Observable implements IObserver {
     }
 
     public void ingresarOrden(OrdenModel pOrden) {
-        // este metodo se encarga de mandarle la orden generada a la cocina
+        // este metodo se encarga de escribir el output para mandarlo a cocina
         try {
             ObjectOutputStream output = new ObjectOutputStream(salonModel.getClientConnect().getOutputStream());
             MensajeOrden mensaje = new MensajeOrden();
@@ -146,9 +146,11 @@ public class SalonController extends Observable implements IObserver {
 
     @Override
     public void update(Observable pObservable, Object args, Object flag) {
+        // si es true entonces es para liberar la mesa
         if((Boolean) flag){
             libreraMesa((int) args);
         }else{
+            // sino para ingresar ordenes
             ingresarOrden((OrdenModel) args);
         }        
     }

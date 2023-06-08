@@ -3,14 +3,11 @@ package Salon.src.Model;
 import java.util.*;
 import java.net.*;
 import java.io.*;
-
-
-import Patterns.Observable;
 import Salon.src.View.*;;
 
 
 
-public class SalonModel extends Observable {
+public class SalonModel {
     private Random rand;
     private ArrayList<Boolean> mesas;
     private ServerSocket salonPort;

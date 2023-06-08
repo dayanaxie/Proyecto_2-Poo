@@ -11,7 +11,7 @@ import java.io.*;
 
 import Constants.*;
 
-public class Simulacion extends SalonModel{
+public class Simulacion {
     private Random rand;
     private Hamburguesa hamburguesa;
     Socket client;
@@ -114,12 +114,11 @@ public class Simulacion extends SalonModel{
                 orden.setHamburguesa(hamburguesa);
                 output = new ObjectOutputStream(client.getOutputStream());
                 MensajeOrden mensaje = new MensajeOrden();
-                System.out.println("Se creo la hamburguesa con: ");
+                System.out.println("Se creo la hamburguesa: " + hamburguesa.getNombre());
                 mensaje.setMensajeOrden(orden);
-                mensaje.mostrarOrden();
                 output.writeObject(mensaje);
                 output.flush();
-                int time = (4 + rand.nextInt(15)) * 1000;
+                int time = (2 + rand.nextInt(10)) * 1000;
                 Thread.sleep(time);
 
 

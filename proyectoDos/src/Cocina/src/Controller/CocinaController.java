@@ -26,6 +26,7 @@ public class CocinaController extends Observable implements IObserver{
 
     @Override
     public void update(Observable pObservable, Object args, Object flag) {
+        // conectarse para mandar la orden lista
         conectar((int)args);
     }
    
