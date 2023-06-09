@@ -215,10 +215,10 @@ public class GuiSalon extends Observable implements ActionListener, IObserver{
         JLabel labelIngredientes = new JLabel("Ingredientes a agregar:");
         labelIngredientes.setHorizontalAlignment(SwingConstants.CENTER);
         panelIngresoPedidos.add(labelIngredientes);
-        String extra1List[] = { "Elegir extra","pepinillos", "torta", "queso", "salsa ranch", "tomate", "aguacate", "cebolla", "jalapeños"};
+        String extra1List[] = { "Elegir extra","Pepinillos", "Torta", "Queso", "Salsa de tomate", "Salsa de mayonesa", "Tomate", "Aguacate", "Cebolla", "Jalapeños", "Lechuga", "Bacon", "Salsa BBQ"};
         extra1ComboBox = new JComboBox<String>(extra1List);
         panelIngresoPedidos.add(extra1ComboBox);
-        String extra2List[] = { "Elegir extra","pepinillos", "torta", "queso", "salsa ranch", "tomate", "aguacate", "cebolla", "jalapeños"};
+        String extra2List[] = { "Elegir extra","Pepinillos", "Torta", "Queso", "Salsa de tomate", "Salsa de mayonesa", "Tomate", "Aguacate", "Cebolla", "Jalapeños", "Lechuga", "Bacon", "Salsa BBQ"};
         extra2ComboBox = new JComboBox<String>(extra2List);
         panelIngresoPedidos.add(extra2ComboBox);
     }

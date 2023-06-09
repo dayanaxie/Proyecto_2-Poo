@@ -118,7 +118,7 @@ public class Simulacion {
                 mensaje.setMensajeOrden(orden);
                 output.writeObject(mensaje);
                 output.flush();
-                int time = (2 + rand.nextInt(10)) * 1000;
+                int time = (5 + rand.nextInt(10)) * 1000;
                 Thread.sleep(time);
 
 

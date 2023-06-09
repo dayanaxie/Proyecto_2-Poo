@@ -89,8 +89,8 @@ public class GuiCocina extends Observable implements ActionListener, IObserver{
 
     private void ingresarOrden(OrdenModel pOrden){
         Border border = BorderFactory.createLineBorder(Color.black, 1);
-        String texto = "Numero de Orden: " + pOrden.getNumMesa() + "\n Nombre: " + pOrden.getHamburguesa().getNombre() 
-        + " con: " + pOrden.getHamburguesa().getIngredientes();
+        String texto = "Numero de Orden: " + pOrden.getNumMesa() + "\nNombre: " + pOrden.getHamburguesa().getNombre() 
+        + " \nIngredientes: " + pOrden.getHamburguesa().getIngredientes();
         JTextArea textArea = new JTextArea(texto);
         textArea.setEditable(false);
         textArea.setLineWrap(true);
